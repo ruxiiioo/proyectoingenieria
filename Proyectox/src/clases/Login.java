@@ -46,6 +46,7 @@ public class Login extends javax.swing.JInternalFrame {
         usuario = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         contrase = new javax.swing.JPasswordField();
+        jButton1 = new javax.swing.JButton();
         panelShadow2 = new org.edisoncor.gui.panel.PanelShadow();
         jLabel1 = new javax.swing.JLabel();
 
@@ -81,6 +82,17 @@ public class Login extends javax.swing.JInternalFrame {
             }
         });
 
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton_comenzar.png"))); // NOI18N
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton_comenzar3.png"))); // NOI18N
+        jButton1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/boton_comenzar2.png"))); // NOI18N
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelShadow1Layout = new javax.swing.GroupLayout(panelShadow1);
         panelShadow1.setLayout(panelShadow1Layout);
         panelShadow1Layout.setHorizontalGroup(
@@ -93,6 +105,10 @@ public class Login extends javax.swing.JInternalFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(contrase, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addGroup(panelShadow1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelShadow1Layout.setVerticalGroup(
             panelShadow1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,7 +121,9 @@ public class Login extends javax.swing.JInternalFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(contrase, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         jLabel1.setFont(new java.awt.Font("Nyala", 0, 36)); // NOI18N
@@ -173,6 +191,59 @@ public class Login extends javax.swing.JInternalFrame {
                  Regresar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cerrarSesion2.png")));
 
     }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String us=usuario.getText();
+        char pas[]=contrase.getPassword();
+        int cont=0;
+        String p="",a="",b="";
+        for (int i = 0; i <pas.length; i++) {
+            p+=pas[i];
+        }
+        Statement estado=null;
+        Connection con=null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con=DriverManager.getConnection("jdbc:mysql://localhost/biblioteca","root","");
+            estado=con.createStatement();
+            ResultSet resultado=estado.executeQuery("select us,contra from usuario where us='"+us+"' and contra='"+p+"and log='"+cont+"");
+            while(resultado.next()){
+                a=resultado.getString("us");
+                b=resultado.getString("contra");
+                cont=resultado.getInt(cont);
+            }
+            if(us.compareTo("")>0 && p.compareTo("")>0 &&(cont<3)){
+                if(us.equals(a) && p.equals(b)){
+                    Correcto(a);
+                 setVisible(false);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,"error de usuario o contraseña");
+                    usuario.setText("");
+                    contrase.setText("");
+                    cont++;
+                }
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"llene los campos para poder acceder");
+                    usuario.setText("");
+                    contrase.setText("");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                estado.close();
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void contraseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contraseActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_contraseActionPerformed
@@ -180,6 +251,7 @@ public class Login extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField contrase;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
